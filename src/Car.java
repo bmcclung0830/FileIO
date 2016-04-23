@@ -1,3 +1,12 @@
+import jodd.json.JsonParser;
+import jodd.json.JsonSerializer;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -14,10 +23,28 @@ public class Car {
     static Scanner carScanner = new Scanner(System.in);
     static Scanner yearScanner = new Scanner(System.in);
     static Scanner engineScanner = new Scanner(System.in);
+    static ArrayList<Car> cars = new ArrayList<>();
+
+    public Car(int year, String color, String make, String model, double engine) {
+        this.year = year;
+        this.color = color;
+        this.make = make;
+        this.model = model;
+        this.engine = engine;
+    }
+
+    public Car(){
+    }
+
+    public static String yourCar() throws FileNotFoundException {
+        File f = new File("car.json");
+        Scanner s = new Scanner(f);
+        s.useDelimiter("\\Z");
+        String contents = s.next();
+        JsonParser p = new JsonParser();
+        cars = p.parse(contents);
 
 
-
-    public static void yourCar() {
         System.out.println("You will be asked 5 simple questions. Please answer them to the best of your ability.\n" +
                 "1. What year is the vehicle you are currently driving?");
         int year = yearScanner.nextInt();
@@ -30,52 +57,45 @@ public class Car {
         System.out.println("5. What is size of the engine in the vehicle you are currently driving. [Enter your answer in the form of: 3.7]");
         double engine = engineScanner.nextDouble();
 
+        cars.add(new Car(year, color, make, model, engine));
+
         System.out.printf("So let's review:\n" +
                 "The car you currently drive is a " +
                 "%s, %s, %s, %s, %s",  + year, color, make, model, engine + ".");
-
-
+        return "";
     }
+
+    public static void saveCar() throws IOException {
+        JsonSerializer s = new JsonSerializer();
+        String json = s.include("*").serialize(cars);
+
+        File f = new File("car.json");
+        FileWriter fw = new FileWriter(f);
+        fw.write(json);
+        fw.close();
+    }
+
 
     public int getYear() {
         return year;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
     }
 
     public String getColor() {
         return color;
     }
 
-    public void setColor(String color) {
-        this.color = color;
-    }
-
     public String getMake() {
         return make;
-    }
-
-    public void setMake(String make) {
-        this.make = make;
     }
 
     public String getModel() {
         return model;
     }
 
-    public void setModel(String model) {
-        this.model = model;
-    }
-
     public double getEngine() {
         return engine;
     }
 
-    public void setEngine(double engine) {
-        this.engine = engine;
-    }
 
     @Override
     public String toString() {

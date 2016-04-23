@@ -12,7 +12,7 @@ public class ReadWriteFile {
 
         //prints the read write file line by line
         Scanner rwfScanner = new Scanner(f);
-        while ( rwfScanner.hasNext()) {
+        while ( rwfScanner.hasNext() ) {
             System.out.println(rwfScanner.nextLine());
         }
         //prints the entire read write file
